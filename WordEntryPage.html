@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Word Entry and List Page</title>
+  <style>
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    .word-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    
+    .word-item input {
+      margin-right: 5px;
+    }
+    
+    .word-item button {
+      margin-left: 5px;
+    }
+  </style>
+  <script>
+    var words = [];
+
+    function addWord() {
+      var wordInput = document.getElementById("wordInput");
+      var wordList = document.getElementById("wordList");
+
+      var word = wordInput.value.trim();
+
+      if (word !== "") {
+        words.push(word);
+        renderWordList();
+        wordInput.value = "";
+      }
+    }
+
+    function removeWord(index) {
+      words.splice(index, 1);
+      renderWordList();
+    }
+
+    function renderWordList() {
+      var wordList = document.getElementById("wordList");
+      wordList.innerHTML = "";
+
+      for (var i = 0; i < words.length; i++) {
+        var listItem = document.createElement("li");
+        listItem.className = "word-item";
+
+        var wordCheckbox = document.createElement("input");
+        wordCheckbox.type = "checkbox";
+        wordCheckbox.disabled = true;
+        listItem.appendChild(wordCheckbox);
+
+        var wordText = document.createElement("span");
+        wordText.textContent = words[i];
+        listItem.appendChild(wordText);
+
+        var editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.onclick = editWord.bind(null, i);
+        listItem.appendChild(editButton);
+
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.onclick = removeWord.bind(null, i);
+        listItem.appendChild(deleteButton);
+
+        wordList.appendChild(listItem);
+      }
+    }
+
+    function editWord(index) {
+      var word = prompt("Edit the word:", words[index]);
+
+      if (word !== null && word.trim() !== "") {
+        words[index] = word.trim();
+        renderWordList();
+      }
+    }
+
+    function startSpellingExercises() {
+      if (words.length > 0) {
+        var wordsParam = words.join(",");
+        window.location.href = "SpellingExercisesPage.html?words=" + encodeURIComponent(wordsParam);
+      } else {
+        alert("Please enter at least one word before starting the spelling exercises.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Word Entry and List Page</h1>
+
+  <label for="wordInput">Enter a Word:</label>
+  <input type="text" id="wordInput" />
+
+  <button onclick="addWord()">Add Word</button>
+
+  <ul id="wordList"></ul>
+
+  <button onclick="startSpellingExercises()">Start Spelling Exercises</button>
+
+  <script>
+    renderWordList();
+  </script>
+</body>
+</html>

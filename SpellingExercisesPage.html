@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spelling Exercises Page</title>
+  <style>
+    /* Styles for the page */
+  </style>
+  <script>
+    var words = [];
+
+    function getWordsFromURL() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var wordString = urlParams.get("words");
+
+      if (wordString) {
+        words = wordString.split(",");
+      }
+    }
+
+    var currentWordIndex = 0;
+
+    function displayNextWord() {
+      var wordDisplay = document.getElementById("wordDisplay");
+      var answerInput = document.getElementById("answerInput");
+      var feedback = document.getElementById("feedback");
+      var nextButton = document.getElementById("nextButton");
+
+      wordDisplay.textContent = words[currentWordIndex];
+      answerInput.value = "";
+      feedback.textContent = "";
+      nextButton.style.display = "none";
+    }
+
+    function checkAnswer() {
+      var answerInput = document.getElementById("answerInput");
+      var feedback = document.getElementById("feedback");
+      var nextButton = document.getElementById("nextButton");
+
+      var answer = answerInput.value.trim();
+      var currentWord = words[currentWordIndex];
+
+      if (answer.toLowerCase() === currentWord.toLowerCase()) {
+        feedback.textContent = "Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "Incorrect. Try again!";
+        feedback.style.color = "red";
+        nextButton.style.display = "none";
+        return;
+      }
+
+      if (currentWordIndex < words.length - 1) {
+        nextButton.style.display = "block";
+      } else {
+        feedback.textContent = "All words completed!";
+        feedback.style.color = "blue";
+      }
+    }
+
+    function goToNextWord() {
+      currentWordIndex++;
+      displayNextWord();
+    }
+
+    window.onload = function() {
+      getWordsFromURL();
+      displayNextWord();
+    };
+  </script>
+</head>
+<body>
+  <h1>Spelling Exercises Page</h1>
+
+  <div id="wordDisplay"></div>
+
+  <input type="text" id="answerInput" placeholder="Enter the spelling" />
+  <button onclick="checkAnswer()">Check</button>
+
+  <div id="feedback"></div>
+
+  <button id="nextButton" onclick="goToNextWord()">Next Word</button>
+</body>
+</html>
